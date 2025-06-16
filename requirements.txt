@@ -1,0 +1,16 @@
+# 必须
+torch
+torchvision
+transformers
+accelerate
+qwen-vl-utils
+decord  # 视频处理
+
+# 我的工具
+tqdm
+opencv-python
+torchinfo
+matplotlib
+
+# 加速用
+# flash-attn
