@@ -211,8 +211,8 @@ test_tmp_dataset = test_tmp_dataset.select(indices)
 indices = list(range(50))
 val_tmp_dataset = val_tmp_dataset.select(indices)
 
-test_dataset = test_tmp_dataset.map(process_func_batch, batched=True,batch_size=4)
-val_dataset = val_tmp_dataset.map(process_func_batch, batched=True, batch_size=4)
+test_dataset = test_tmp_dataset.map(process_func_batch, batched=True,batch_size=1)
+val_dataset = val_tmp_dataset.map(process_func_batch, batched=True, batch_size=1)
 
 print("Test and Val Datasets have been created.")
 

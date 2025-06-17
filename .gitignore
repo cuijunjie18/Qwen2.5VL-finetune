@@ -15,12 +15,16 @@ reference/
 # dataset
 datasets/
 
-demo_images
-
 # uv log
 uv.lock
 
 temp.txt
 label.png
 predict.png
+
+# train/inference logs
+logs/
+
+# output
+output/
 
