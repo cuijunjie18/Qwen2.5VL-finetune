@@ -90,14 +90,14 @@
 
 - Transformer的训练步数计算
   实际训练步数公式如下：
-  $$
+  $
   update\_times = \frac{train\_data\_nums \times epoch\_nums}{batch\_size \times gpu\_nums \times gradient\_accumulate\_nums}
-  $$
+  $
 
   但实际计算是先算每一个epoch的更新步数，再乘以epoch的次数,即
-  $$
+  $
   update\_times = \lceil \frac{train\_data\_nums}{batch\_size \times gpu\_nums \times gradient\_accumulate\_nums} \rceil \times epoch\_nums
-  $$
+  $
 
 ## 参考
 

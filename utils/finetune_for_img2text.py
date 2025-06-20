@@ -55,6 +55,9 @@ def process_func(example):
     text = processor.apply_chat_template(
         messages, tokenize=False, add_generation_prompt=True
     )  # 获取文本
+
+    # breakpoint()
+
     image_inputs, video_inputs = process_vision_info(messages)  # 获取数据数据（预处理过）
     inputs = processor(
         text=[text],
