@@ -23,6 +23,11 @@
   - 学会设置环境变量去指定多卡训练.
   - 成功微调coco的image to text任务.
 
+- 2025-6-20
+  - 优化项目结构.
+  - 理解LoRA微调的参数配置.
+  - 了解了Transformer库的训练的进度条的显示为什么是对应的次数.
+
 ## 收获
 
 - datasets库的load_dataset使用
@@ -82,3 +87,19 @@
   2>&1 | tee logs/${log_name}$(date '+%Y-%m-%d_%H-%M-%S').log
   ```
   这个重定向会在一定程度上影响输出样式.要注意。
+
+- Transformer的训练步数计算
+  实际训练步数公式如下：
+  $$
+  update\_times = \frac{train\_data\_nums \times epoch\_nums}{batch\_size \times gpu\_nums \times gradient\_accumulate\_nums}
+  $$
+
+  但实际计算是先算每一个epoch的更新步数，再乘以epoch的次数,即
+  $$
+  update\_times = \lceil \frac{train\_data\_nums}{batch\_size \times gpu\_nums \times gradient\_accumulate\_nums} \rceil \times epoch\_nums
+  $$
+
+## 参考
+
+- 大模型微调与部署指南：https://wuduoyi.com/llm-finetune/basic.html
+- Qwen2.5VL官网：https://github.com/QwenLM/Qwen2.5-VL

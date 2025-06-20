@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export CUDA_VISIBLE_DEVICES="3" # 设置可用的gpu列表
+export CUDA_VISIBLE_DEVICES="0" # 设置可用的gpu列表
 log_name="infer-small-coco"
 model_dir="pretrained/Qwen2.5-VL-3B-Instruct"
 image_path="small-coco/train/train-000000156.png"
@@ -17,4 +17,4 @@ args="
 "
 
 uv run utils/predict_for_small-coco.py ${args} \
-2>&1 | tee logs/${log_name}$(date '+%Y-%m-%d_%H-%M-%S').log
+# 2>&1 | tee logs/${log_name}$(date '+%Y-%m-%d_%H-%M-%S').log

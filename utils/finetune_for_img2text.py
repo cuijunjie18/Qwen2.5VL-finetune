@@ -111,72 +111,72 @@ model.enable_input_require_grads()  # 开启梯度检查点时，要执行该方
 # 加载数据
 indices = list(range(1000))
 train_data_json = args.dataset
-
-
 train_ds = Dataset.from_json(train_data_json)
-train_ds = train_ds.select(indices)
+train_ds = train_ds.select(indices) # 仅选择前1000个来训练
 
-breakpoint()
-
+print("========================================================")
+print("Dataset build....")
 train_dataset = train_ds.map(process_func)
+print("Finished!")
 
 
 # 配置LoRA
 config = LoraConfig(
     task_type=TaskType.CAUSAL_LM,
     target_modules=["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"],
-    inference_mode=False,  # 训练模式
-    r=64,  # Lora 秩
-    lora_alpha=16,  # Lora alaph，具体作用参见 Lora 原理
-    lora_dropout=0.05,  # Dropout 比例
+    inference_mode=False,   # 训练模式
+    r=64,                   # Lora 秩
+    lora_alpha=16,          # Lora alaph，具体作用参见 Lora 原理
+    lora_dropout=0.05,      # Dropout 比例
     bias="none",
 )
 
 # 获取LoRA模型
 peft_model = get_peft_model(model, config)
+peft_model.print_trainable_parameters()  # 打印可训练参数信息
 
 # 配置训练参数
-args = TrainingArguments(
+train_args = TrainingArguments(
     output_dir="./output/Qwen2.5-VL-3B",
     per_device_train_batch_size=args.batch_size,
     gradient_accumulation_steps=4,
-    logging_steps=10,
-    logging_first_step=5,
+    # logging_steps=10,
+    # logging_first_step=5,
     num_train_epochs=10,
-    save_steps=100,
+    # save_steps=100,
     learning_rate=1e-4,
-    save_on_each_node=True,
+    # save_on_each_node=True,
     gradient_checkpointing=True,
     report_to="none",
 )
 
-# 设置SwanLab回调
-swanlab_callback = SwanLabCallback(
-    project="Qwen2.5-VL-3B-finetune",
-    experiment_name="qwen2-vl-coco",
-    config={
-        "model": "https://modelscope.cn/models/Qwen/Qwen2-VL-2B-Instruct",
-        "dataset": "https://modelscope.cn/datasets/modelscope/coco_2014_caption/quickstart",
-        "github": "https://github.com/datawhalechina/self-llm",
-        "prompt": "COCO Yes: ",
-        "train_data_number": len(train_ds),
-        "lora_rank": 64,
-        "lora_alpha": 16,
-        "lora_dropout": 0.1,
-    },
-)
+# # 设置SwanLab回调
+# swanlab_callback = SwanLabCallback(
+#     project="Qwen2.5-VL-3B-finetune",
+#     experiment_name="qwen2-vl-coco",
+#     config={
+#         "model": "https://modelscope.cn/models/Qwen/Qwen2-VL-2B-Instruct",
+#         "dataset": "https://modelscope.cn/datasets/modelscope/coco_2014_caption/quickstart",
+#         "github": "https://github.com/datawhalechina/self-llm",
+#         "prompt": "COCO Yes: ",
+#         "train_data_number": len(train_ds),
+#         "lora_rank": 64,
+#         "lora_alpha": 16,
+#         "lora_dropout": 0.1,
+#     },
+# )
 
 # 配置Trainer
 trainer = Trainer(
     model=peft_model,
-    args=args,
+    args=train_args,
     train_dataset=train_dataset,
     data_collator=DataCollatorForSeq2Seq(tokenizer=tokenizer, padding=True),
-    callbacks=[swanlab_callback],
+    # callbacks=[swanlab_callback],
 )
 
 # 开启模型训练
 trainer.train()
 
 # 结束
-swanlab.finish()
+# swanlab.finish()
